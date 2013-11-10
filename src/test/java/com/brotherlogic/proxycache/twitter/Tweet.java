@@ -1,4 +1,4 @@
-package com.brotherlogic.proxycache.example.twitter;
+package com.brotherlogic.proxycache.twitter;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -16,27 +16,6 @@ import com.brotherlogic.proxycache.ObjectProperties;
 @ObjectProperties(staletime = 86400)
 public class Tweet {
 
-	private String text;
-	private long id;
-
-	public long getId() {
-		return id;
-	}
-
-	@LinkURL(path = "id")
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	@LinkURL(path = "text")
-	public void setText(String txt) {
-		this.text = txt;
-	}
-
-	public String getText(String txt) {
-		return text;
-	}
-
 	public static void main(String[] args) {
 		Class<?> tClass = Tweet.class;
 		for (Method m : tClass.getMethods()) {
@@ -45,6 +24,26 @@ public class Tweet {
 		}
 
 		System.out.println(tClass.getAnnotations());
+	}
+
+	private long id;
+
+	private String text;
+
+	public long getId() {
+		return id;
+	}
+
+	public String getText(String txt) {
+		return text;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setText(String txt) {
+		this.text = txt;
 	}
 
 }
