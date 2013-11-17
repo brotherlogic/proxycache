@@ -5,9 +5,13 @@ import com.brotherlogic.proxycache.LinkURL;
 @LinkURL(url = "http://api.discogs.com/users/<username>")
 public class DiscogsUser {
 
-	String username;
+	private String username;
 
-	int releases_rated;
+	private int releases_rated;
+
+	public DiscogsUser(String username) {
+		this.username = username;
+	}
 
 	public String getUsername() {
 		return username;

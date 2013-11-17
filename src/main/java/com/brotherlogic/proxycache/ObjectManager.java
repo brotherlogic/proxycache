@@ -1,7 +1,13 @@
 package com.brotherlogic.proxycache;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
+
+import com.brotherlogic.proxycache.discogs.StandardOAuthService;
+import com.brotherlogic.proxycache.example.twitter.ObjectBuilder;
+import com.brotherlogic.proxycache.example.twitter.ObjectBuilderFactory;
+import com.google.gson.JsonObject;
 
 /**
  * Represents an object manager in the system. Object managers are able to
@@ -10,41 +16,58 @@ import java.net.URL;
  * @author simon
  * 
  * @param <X>
- *           The generic class of this manager
+ *            The generic class of this manager
  */
-public class ObjectManager<X>
-{
-   /** Flag to indicate if we want a fast (i.e. non updating) return */
-   private final Boolean immediateReturn = false;
+public class ObjectManager<X> {
 
-   /** The class defined by this manager */
-   private final Class<X> underlyingClass;
+	/** The class defined by this manager */
+	private final Class<X> underlyingClass;
 
-   /**
-    * Base constructor
-    * 
-    * @param uClass
-    *           The class that this object manages
-    */
-   public ObjectManager(Class<X> uClass)
-   {
-      underlyingClass = uClass;
-   }
+	/** This does the hevay lifting on the builder */
+	private final ObjectBuilder<X> builder;
 
-   public X get(String id)
-   {
-      // Check the local cache
+	/** For handling web requests */
+	private final StandardOAuthService service;
 
-      // Check for staling
+	/**
+	 * Base constructor
+	 * 
+	 * @param uClass
+	 *            The class that this object manages
+	 */
+	public ObjectManager(Class<X> uClass, StandardOAuthService serv) {
+		underlyingClass = uClass;
+		service = serv;
+		builder = ObjectBuilderFactory.getInstance().getObjectBuilder(uClass);
+	}
 
-      // Update the object if necessary
+	public X get(String id) {
+		// Check the local cache
 
-      // Return the object
-      return null;
-   }
+		// Check for staling
 
-   private void runMethod(Method m, URL url, String path)
-   {
+		// Update the object if necessary
 
-   }
+		// Return the object
+		return null;
+	}
+
+	public X get() throws IOException {
+		// Check the local cache
+
+		// Check for staling
+
+		// Update the object if necessary
+		LinkURL link = underlyingClass.getAnnotation(LinkURL.class);
+		String path = link.url();
+		JsonObject objRep = service.get(path).getAsJsonObject();
+		X obj = builder.build(objRep);
+
+		// Return the object
+		return obj;
+	}
+
+	private void runMethod(Method m, URL url, String path) {
+
+	}
 }

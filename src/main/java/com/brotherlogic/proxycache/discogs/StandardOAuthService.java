@@ -19,7 +19,18 @@ public abstract class StandardOAuthService {
 
 	public abstract Token buildAccessToken() throws IOException;
 
-	public JsonElement get(String url) {
+	public abstract OAuthService getService() throws IOException;
+
+	public void login() throws IOException {
+		if (accessToken == null)
+			accessToken = buildAccessToken();
+
+		if (service == null)
+			service = getService();
+	}
+
+	public JsonElement get(String url) throws IOException {
+		login();
 		OAuthRequest request = new OAuthRequest(Verb.GET, url);
 		service.signRequest(accessToken, request);
 		Response response = request.send();
