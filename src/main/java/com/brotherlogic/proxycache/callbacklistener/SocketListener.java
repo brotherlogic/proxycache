@@ -11,6 +11,42 @@ import java.util.TreeMap;
 
 public class SocketListener {
 
+	boolean processed;
+
+	public Map<String, String> listenForWebRequest(final int port) {
+
+		final Map<String, String> response = new TreeMap<String, String>();
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					listenForWebRequest(port, new ListenerCallback() {
+						@Override
+						public void processResponse(Map<String, String> props) {
+							response.putAll(props);
+						}
+					});
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				processed = true;
+			}
+		});
+		t.start();
+
+		// Wait for the response to be processed
+		while (!processed)
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		return response;
+
+	}
+
 	public void listenForWebRequest(int port, ListenerCallback callback)
 			throws IOException {
 

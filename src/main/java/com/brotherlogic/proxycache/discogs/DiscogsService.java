@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.Token;
+import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
 import com.brotherlogic.proxycache.callbacklistener.SocketListener;
@@ -27,15 +28,18 @@ public class DiscogsService extends StandardOAuthService {
 
 		// Run up the listening server
 		SocketListener listener = new SocketListener();
-		Map<String, String> response = listener.listenForWebRequest(8094);
 
 		try {
 			Desktop.getDesktop().browse(new URI(authURL));
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
+		Map<String, String> response = listener.listenForWebRequest(8094);
 
-		return null;
+		Verifier v = new Verifier(response.get("verifier_code"));
+		Token accessToken = service.getAccessToken(requestToken, v);
+
+		return accessToken;
 	}
 
 	public static void main(String[] args) throws Exception {
