@@ -1,8 +1,5 @@
 package com.brotherlogic.proxycache.twitter;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-
 import com.brotherlogic.proxycache.LinkURL;
 import com.brotherlogic.proxycache.ObjectProperties;
 
@@ -15,16 +12,6 @@ import com.brotherlogic.proxycache.ObjectProperties;
 @LinkURL(url = "https://api.twitter.com/1.1/statuses/show.json")
 @ObjectProperties(staletime = 86400)
 public class Tweet {
-
-	public static void main(String[] args) {
-		Class<?> tClass = Tweet.class;
-		for (Method m : tClass.getMethods()) {
-			System.out.println(m.getName() + " => "
-					+ Arrays.toString(m.getAnnotations()));
-		}
-
-		System.out.println(tClass.getAnnotations());
-	}
 
 	private long id;
 
