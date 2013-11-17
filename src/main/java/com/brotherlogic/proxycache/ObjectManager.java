@@ -20,14 +20,14 @@ import com.google.gson.JsonObject;
  */
 public class ObjectManager<X> {
 
-	/** The class defined by this manager */
-	private final Class<X> underlyingClass;
-
 	/** This does the hevay lifting on the builder */
 	private final ObjectBuilder<X> builder;
 
 	/** For handling web requests */
 	private final StandardOAuthService service;
+
+	/** The class defined by this manager */
+	private final Class<X> underlyingClass;
 
 	/**
 	 * Base constructor
@@ -39,17 +39,6 @@ public class ObjectManager<X> {
 		underlyingClass = uClass;
 		service = serv;
 		builder = ObjectBuilderFactory.getInstance().getObjectBuilder(uClass);
-	}
-
-	public X get(String id) {
-		// Check the local cache
-
-		// Check for staling
-
-		// Update the object if necessary
-
-		// Return the object
-		return null;
 	}
 
 	public X get() throws IOException {
@@ -65,6 +54,25 @@ public class ObjectManager<X> {
 
 		// Return the object
 		return obj;
+	}
+
+	public X get(String id) {
+		// Check the local cache
+
+		// Check for staling
+
+		// Update the object if necessary
+
+		// Return the object
+		return null;
+	}
+
+	public void refresh(X obj) throws IOException {
+		LinkURL link = underlyingClass.getAnnotation(LinkURL.class);
+		String path = link.url();
+		String rPath = builder.replace(path, obj);
+		JsonObject objRep = service.get(rPath).getAsJsonObject();
+		builder.refreshObject(obj, objRep);
 	}
 
 	private void runMethod(Method m, URL url, String path) {

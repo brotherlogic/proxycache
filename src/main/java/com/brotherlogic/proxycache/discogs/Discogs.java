@@ -9,15 +9,16 @@ public class Discogs {
 	public DiscogsUser getMe() throws Exception {
 		// Force load a user from the identity URL
 		ObjectManager<Identity> manager = new ObjectManager<Identity>(
-				Identity.class, new DiscogsService());
+				Identity.class, service);
 		Identity ident = manager.get();
 		DiscogsUser user = new DiscogsUser(ident.getUsername());
-		manager.refresh(user);
+		new ObjectManager<>(DiscogsUser.class, service).refresh(user);
 		return user;
 	}
 
 	public static void main(String[] args) throws Exception {
 		Discogs me = new Discogs();
-		me.getMe();
+		DiscogsUser user = me.getMe();
+		System.out.println(user.getReleases_rated());
 	}
 }

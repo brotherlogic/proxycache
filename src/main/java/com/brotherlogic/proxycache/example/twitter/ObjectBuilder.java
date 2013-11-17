@@ -44,6 +44,7 @@ public class ObjectBuilder<X> {
 			} else {
 				// Look for the item in the json source
 				if (source.has(getJSONName(m))) {
+					System.out.println(m + " with " + source);
 					m.invoke(
 							object,
 							buildParams(m, source,
@@ -113,6 +114,8 @@ public class ObjectBuilder<X> {
 			return elem.getAsLong();
 		else if (clz.equals(String.class))
 			return elem.getAsString();
+		else if (clz.equals(Integer.class) || clz.equals(int.class))
+			return elem.getAsInt();
 
 		System.out.println("Can't convert " + clz);
 
@@ -137,10 +140,36 @@ public class ObjectBuilder<X> {
 		return methods;
 	}
 
-	private void refreshObject(X object, JsonObject source) {
+	public void refreshObject(X object, JsonObject source) {
 		for (Method m : getSetMethods()) {
 			applyMethod(m, object, source);
 		}
+	}
+
+	public String replace(String url, X obj) {
+		String newUrl = url;
+		while (newUrl.indexOf("<") > 0) {
+			String parameter = newUrl.substring(newUrl.indexOf("<") + 1,
+					newUrl.indexOf(">"));
+
+			String rep = "";
+			try {
+				System.out.println(parameter + " => " + obj);
+				rep = baseClass
+						.getMethod(
+								"get"
+										+ Character.toUpperCase(parameter
+												.charAt(0))
+										+ parameter.substring(1), new Class[0])
+						.invoke(obj, new Object[0]).toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			newUrl = newUrl.replace("<" + parameter + ">", rep);
+		}
+
+		return newUrl;
 	}
 
 	private JsonElement resolvePath(String path, JsonObject obj) {
