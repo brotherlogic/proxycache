@@ -20,5 +20,7 @@ public class Discogs {
 		Discogs me = new Discogs();
 		DiscogsUser user = me.getMe();
 		System.out.println(user.getReleases_rated());
+		System.out.println(user.getFolders() + " => "
+				+ user.getFolders().getClass());
 	}
 }

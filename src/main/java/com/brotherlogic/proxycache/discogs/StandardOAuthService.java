@@ -13,13 +13,39 @@ import com.google.gson.JsonParser;
 
 public abstract class StandardOAuthService {
 
+	static long lastPullTime = 0;
 	Token accessToken;
-	OAuthService service;
 	JsonParser parser = new JsonParser();
+	OAuthService service;
 
 	public abstract Token buildAccessToken() throws IOException;
 
+	public synchronized JsonElement get(String url) throws IOException {
+
+		localWait();
+
+		login();
+		OAuthRequest request = new OAuthRequest(Verb.GET, url);
+		service.signRequest(accessToken, request);
+		Response response = request.send();
+		lastPullTime = System.currentTimeMillis();
+		return parser.parse(response.getBody());
+	}
+
 	public abstract OAuthService getService() throws IOException;
+
+	public abstract Long getWaitTime();
+
+	private void localWait() {
+		long waitTime = getWaitTime()
+				- (System.currentTimeMillis() - lastPullTime);
+		if (waitTime > 0)
+			try {
+				Thread.sleep(waitTime);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	}
 
 	public void login() throws IOException {
 		if (accessToken == null)
@@ -27,13 +53,5 @@ public abstract class StandardOAuthService {
 
 		if (service == null)
 			service = getService();
-	}
-
-	public JsonElement get(String url) throws IOException {
-		login();
-		OAuthRequest request = new OAuthRequest(Verb.GET, url);
-		service.signRequest(accessToken, request);
-		Response response = request.send();
-		return parser.parse(response.getBody());
 	}
 }

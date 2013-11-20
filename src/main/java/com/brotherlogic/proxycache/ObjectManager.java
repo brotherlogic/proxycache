@@ -38,7 +38,8 @@ public class ObjectManager<X> {
 	public ObjectManager(Class<X> uClass, StandardOAuthService serv) {
 		underlyingClass = uClass;
 		service = serv;
-		builder = ObjectBuilderFactory.getInstance().getObjectBuilder(uClass);
+		builder = ObjectBuilderFactory.getInstance().getObjectBuilder(uClass,
+				serv);
 	}
 
 	public X get() throws IOException {

@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import com.brotherlogic.proxycache.LinkURL;
+import com.brotherlogic.proxycache.SimpleCollectionUnbounded;
+import com.brotherlogic.proxycache.discogs.StandardOAuthService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -21,9 +23,11 @@ import com.google.gson.JsonParser;
 public class ObjectBuilder<X> {
 
 	private final Class<X> baseClass;
+	StandardOAuthService service;
 
-	public ObjectBuilder(Class<X> clz) {
+	public ObjectBuilder(Class<X> clz, StandardOAuthService serv) {
 		baseClass = clz;
+		service = serv;
 	}
 
 	private JsonElement applyAnnotationMethod(Method m, LinkURL anno, X object,
@@ -31,6 +35,19 @@ public class ObjectBuilder<X> {
 		String path = anno.path();
 		JsonElement elem = resolvePath(path, source);
 		return elem;
+	}
+
+	private void applyCollectionMethod(Method m, X object, JsonObject source) {
+		try {
+			LinkURL anno = m.getAnnotation(LinkURL.class);
+			Class<?> clz = Class.forName(anno.prodClass());
+
+			SimpleCollectionUnbounded scu = new SimpleCollectionUnbounded<>(
+					clz, service, replace(anno.url(), object), anno.path());
+			m.invoke(object, new Object[] { scu });
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void applyMethod(Method m, X object, JsonObject source) {
@@ -44,7 +61,6 @@ public class ObjectBuilder<X> {
 			} else {
 				// Look for the item in the json source
 				if (source.has(getJSONName(m))) {
-					System.out.println(m + " with " + source);
 					m.invoke(
 							object,
 							buildParams(m, source,
@@ -142,7 +158,13 @@ public class ObjectBuilder<X> {
 
 	public void refreshObject(X object, JsonObject source) {
 		for (Method m : getSetMethods()) {
-			applyMethod(m, object, source);
+			// Look for collection based set methods
+			if (m.getParameterTypes().length == 1
+					&& Collection.class
+							.isAssignableFrom(m.getParameterTypes()[0]))
+				applyCollectionMethod(m, object, source);
+			else
+				applyMethod(m, object, source);
 		}
 	}
 
@@ -172,7 +194,7 @@ public class ObjectBuilder<X> {
 		return newUrl;
 	}
 
-	private JsonElement resolvePath(String path, JsonObject obj) {
+	public JsonElement resolvePath(String path, JsonObject obj) {
 		String[] elems = path.split("->");
 		JsonElement elem = obj;
 		for (int i = 0; i < elems.length; i++)
