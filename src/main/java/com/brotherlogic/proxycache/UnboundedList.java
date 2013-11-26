@@ -27,6 +27,13 @@ public abstract class UnboundedList<X> extends LinkedList<X> {
 		overallSize++;
 	}
 
+	@Override
+	public boolean add(X obj) {
+		boolean val = super.add(obj);
+		overallSize++;
+		return val;
+	}
+
 	protected abstract int fillBottom() throws IOException;
 
 	protected abstract int fillTop() throws IOException;
@@ -55,8 +62,19 @@ public abstract class UnboundedList<X> extends LinkedList<X> {
 						e.printStackTrace();
 					}
 					topFilled = true;
+					return index < size();
 				}
+
+				if (index >= size()) {
+					try {
+						fillBottom();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
 				return index < size();
+
 			}
 
 			@Override

@@ -25,8 +25,6 @@ public class Folder {
 		return name;
 	}
 
-	@LinkURL(url = "<resource_url>", prodClass = "com.brotherlogic.proxycache.discogs.Release", path = "releases")
-	@Pagination(botPath = "pagination->")
 	public Collection<Release> getReleases() {
 		return releases;
 	}
@@ -43,6 +41,8 @@ public class Folder {
 		this.name = name;
 	}
 
+	@LinkURL(url = "[resource_url]/releases", prodClass = "com.brotherlogic.proxycache.discogs.Release", path = "releases")
+	@Pagination(botPath = "pagination->urls->next")
 	public void setReleases(Collection<Release> releases) {
 		this.releases = releases;
 	}

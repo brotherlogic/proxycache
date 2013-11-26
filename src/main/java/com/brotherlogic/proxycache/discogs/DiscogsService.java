@@ -15,9 +15,6 @@ import com.brotherlogic.proxycache.callbacklistener.SocketListener;
 
 public class DiscogsService extends StandardOAuthService {
 
-	String consumerKey = "RCyqexMcezQoBfTGpcsG";
-	String consumerSecret = "wQMnFXZYkoyyVXEjrjBnbIMxBynUvpDB";
-
 	@Override
 	public Token buildAccessToken() throws IOException {
 

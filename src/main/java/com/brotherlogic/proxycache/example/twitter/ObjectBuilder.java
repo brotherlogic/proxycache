@@ -6,7 +6,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import com.brotherlogic.proxycache.LinkURL;
+import com.brotherlogic.proxycache.Pagination;
 import com.brotherlogic.proxycache.SimpleCollectionUnbounded;
+import com.brotherlogic.proxycache.WebList;
 import com.brotherlogic.proxycache.discogs.StandardOAuthService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -42,9 +44,18 @@ public class ObjectBuilder<X> {
 			LinkURL anno = m.getAnnotation(LinkURL.class);
 			Class<?> clz = Class.forName(anno.prodClass());
 
-			SimpleCollectionUnbounded scu = new SimpleCollectionUnbounded<>(
-					clz, service, replace(anno.url(), object), anno.path());
-			m.invoke(object, new Object[] { scu });
+			Pagination pag = m.getAnnotation(Pagination.class);
+
+			if (pag == null) {
+				SimpleCollectionUnbounded scu = new SimpleCollectionUnbounded<>(
+						clz, service, replace(anno.url(), object, source),
+						anno.path());
+				m.invoke(object, new Object[] { scu });
+			} else {
+				WebList wl = new WebList<>(clz, service, replace(anno.url(),
+						object, source), anno.path(), pag);
+				m.invoke(object, new Object[] { wl });
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -54,6 +65,7 @@ public class ObjectBuilder<X> {
 		try {
 			// Look for an annotation
 			LinkURL anno = m.getAnnotation(LinkURL.class);
+
 			if (anno != null && anno.path().length() > 0) {
 				JsonElement elem = applyAnnotationMethod(m, anno, object,
 						source);
@@ -168,7 +180,7 @@ public class ObjectBuilder<X> {
 		}
 	}
 
-	public String replace(String url, X obj) {
+	public String replace(String url, X obj, JsonObject source) {
 		String newUrl = url;
 		while (newUrl.indexOf("<") > 0) {
 			String parameter = newUrl.substring(newUrl.indexOf("<") + 1,
@@ -176,7 +188,6 @@ public class ObjectBuilder<X> {
 
 			String rep = "";
 			try {
-				System.out.println(parameter + " => " + obj);
 				rep = baseClass
 						.getMethod(
 								"get"
@@ -189,6 +200,20 @@ public class ObjectBuilder<X> {
 			}
 
 			newUrl = newUrl.replace("<" + parameter + ">", rep);
+		}
+
+		while (newUrl.indexOf("[") >= 0) {
+			String parameter = newUrl.substring(newUrl.indexOf("[") + 1,
+					newUrl.indexOf("]"));
+
+			String rep = "";
+			try {
+				rep = resolvePath(parameter, source).getAsString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			newUrl = newUrl.replace("[" + parameter + "]", rep);
 		}
 
 		return newUrl;

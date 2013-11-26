@@ -71,7 +71,7 @@ public class ObjectManager<X> {
 	public void refresh(X obj) throws IOException {
 		LinkURL link = underlyingClass.getAnnotation(LinkURL.class);
 		String path = link.url();
-		String rPath = builder.replace(path, obj);
+		String rPath = builder.replace(path, obj, null);
 		JsonObject objRep = service.get(rPath).getAsJsonObject();
 		builder.refreshObject(obj, objRep);
 	}

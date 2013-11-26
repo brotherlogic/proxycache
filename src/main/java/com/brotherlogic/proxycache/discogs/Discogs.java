@@ -19,8 +19,14 @@ public class Discogs {
 	public static void main(String[] args) throws Exception {
 		Discogs me = new Discogs();
 		DiscogsUser user = me.getMe();
-		System.out.println(user.getReleases_rated());
-		System.out.println(user.getFolders() + " => "
-				+ user.getFolders().getClass());
+
+		for (Folder f : user.getFolders()) {
+			if (f.getName().equals("10s")) {
+				for (Release r : f.getReleases()) {
+					System.out.println("RELEASE = " + r.getTitle() + " => "
+							+ r.getLabels());
+				}
+			}
+		}
 	}
 }
