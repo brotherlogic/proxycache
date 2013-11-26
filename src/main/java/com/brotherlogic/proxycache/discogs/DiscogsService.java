@@ -18,7 +18,7 @@ public class DiscogsService extends StandardOAuthService {
 	@Override
 	public Token buildAccessToken() throws IOException {
 
-		OAuthService service = getService();
+		OAuthService service = getService("blah1", "blah2");
 
 		Token requestToken = service.getRequestToken();
 		String authURL = service.getAuthorizationUrl(requestToken);
@@ -40,7 +40,8 @@ public class DiscogsService extends StandardOAuthService {
 	}
 
 	@Override
-	public OAuthService getService() throws IOException {
+	public OAuthService getService(String consumerKey, String consumerSecret)
+			throws IOException {
 		return new ServiceBuilder().provider(DiscogsAPI.class)
 				.apiKey(consumerKey).apiSecret(consumerSecret)
 				.callback("http://localhost:8094/blah").build();

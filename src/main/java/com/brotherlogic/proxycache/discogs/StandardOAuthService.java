@@ -24,7 +24,7 @@ public abstract class StandardOAuthService {
 
 		localWait();
 
-		login();
+		login("madeup1", "madeup2");
 		OAuthRequest request = new OAuthRequest(Verb.GET, url);
 		service.signRequest(accessToken, request);
 		Response response = request.send();
@@ -32,7 +32,8 @@ public abstract class StandardOAuthService {
 		return parser.parse(response.getBody());
 	}
 
-	public abstract OAuthService getService() throws IOException;
+	public abstract OAuthService getService(String key, String secret)
+			throws IOException;
 
 	public abstract Long getWaitTime();
 
@@ -47,11 +48,11 @@ public abstract class StandardOAuthService {
 			}
 	}
 
-	public void login() throws IOException {
+	public void login(String secret, String key) throws IOException {
 		if (accessToken == null)
 			accessToken = buildAccessToken();
 
 		if (service == null)
-			service = getService();
+			service = getService(secret, key);
 	}
 }
