@@ -9,6 +9,10 @@
   <name>proxycache</name>
   <url>http://maven.apache.org</url>
 
+  <prerequisites>
+    <maven>2.2.1</maven>
+  </prerequisites>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -76,6 +80,15 @@
             <target>1.7</target>
 	  </configuration>
 	</plugin>
+
+        <plugin>
+          <groupId>com.atlassian.maven.plugins</groupId>
+          <artifactId>maven-jgitflow-plugin</artifactId>
+          <version>1.0-alpha21.1</version>
+          <configuration>
+            <!-- see goals wiki page for configuration options -->
+          </configuration>
+        </plugin>
       </plugins>
   </build>
 
