@@ -13,37 +13,33 @@ public class SingleMethodCall {
 	String[][] pathElems;
 	Class<?>[] paramTypes;
 	URL url;
-	
-	public Object processMethod(Object obj) throws InvocationTargetException, IllegalAccessException
-	{
+
+	public Object processMethod(Object obj) throws InvocationTargetException,
+			IllegalAccessException {
 		Object[] params = buildParameterList();
 		Object o = m.invoke(obj, params);
 		return o;
 	}
-	
-	private Object[] buildParameterList()
-	{
+
+	private Object[] buildParameterList() {
 		JsonElement elem = readURL(url);
-		
-		Object[] params = new Object[paramTypes.length];	
-		for(int i = 0 ; i < params.length ; i++)
-		{
+
+		Object[] params = new Object[paramTypes.length];
+		for (int i = 0; i < params.length; i++) {
 			JsonObject obj = elem.getAsJsonObject();
-			for(int j = 0 ; j < pathElems.length ; j++)
+			for (int j = 0; j < pathElems.length; j++)
 				obj = obj.get(pathElems[i][j]).getAsJsonObject();
-			params[i] = convertJson(obj,paramTypes[i]);
+			params[i] = convertJson(obj, paramTypes[i]);
 		}
-		
+
 		return params;
 	}
-	
-	private Object convertJson(JsonObject obj, Class<?> convertTo)
-	{
+
+	private Object convertJson(JsonObject obj, Class<?> convertTo) {
 		return new Gson().fromJson(obj, convertTo);
 	}
-	
-	private JsonElement readURL(URL url)
-	{
+
+	private JsonElement readURL(URL url) {
 		return null;
 	}
-}	
+}

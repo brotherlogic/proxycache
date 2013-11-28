@@ -70,28 +70,39 @@
   </distributionManagement>
 
   <build>
-      <plugins>
-  	<plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-compiler-plugin</artifactId>
-	  <version>2.3.2</version>
-	  <configuration>
-            <source>1.7</source>
-            <target>1.7</target>
-	  </configuration>
-	</plugin>
-
-        <plugin>
-          <groupId>com.atlassian.maven.plugins</groupId>
-          <artifactId>maven-jgitflow-plugin</artifactId>
-          <version>1.0-alpha21.1</version>
-          <configuration>
-            <!-- see goals wiki page for configuration options -->
-          </configuration>
-        </plugin>
-      </plugins>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-compiler-plugin</artifactId>
+	<version>2.3.2</version>
+	<configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+	</configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.11</version>
+        <configuration>
+          <configLocation>etc/mychecks.xml</configLocation>
+          <failOnViolation>true</failOnViolation>
+          <logViolationsToConsole>true</logViolationsToConsole>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>com.atlassian.maven.plugins</groupId>
+        <artifactId>maven-jgitflow-plugin</artifactId>
+        <version>1.0-alpha21.1</version>
+        <configuration>
+          <!-- see goals wiki page for configuration options -->
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
-
+  
   <reporting>
     <plugins>
       <plugin>
@@ -104,9 +115,17 @@
           </formats>
         </configuration>
       </plugin>
-
- 
-
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.11</version>
+        <configuration>
+          <configLocation>etc/mychecks.xml</configLocation>
+          <failOnViolation>true</failOnViolation>
+          <logViolationsToConsole>true</logViolationsToConsole>
+        </configuration>
+      </plugin>
     </plugins>
   </reporting>
 </project>
