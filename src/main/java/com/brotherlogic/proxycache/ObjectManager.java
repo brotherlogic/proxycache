@@ -1,8 +1,6 @@
 package com.brotherlogic.proxycache;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URL;
 
 import com.brotherlogic.proxycache.discogs.StandardOAuthService;
 import com.brotherlogic.proxycache.example.twitter.ObjectBuilder;
@@ -10,8 +8,7 @@ import com.brotherlogic.proxycache.example.twitter.ObjectBuilderFactory;
 import com.google.gson.JsonObject;
 
 /**
- * Represents an object manager in the system. Object managers are able to
- * process basic objects
+ * Represents an object manager in the system. Object managers are able to process basic objects
  * 
  * @author simon
  * 
@@ -20,63 +17,82 @@ import com.google.gson.JsonObject;
  */
 public class ObjectManager<X> {
 
-	/** This does the hevay lifting on the builder */
-	private final ObjectBuilder<X> builder;
+    /** This does the hevay lifting on the builder */
+    private final ObjectBuilder<X> builder;
 
-	/** For handling web requests */
-	private final StandardOAuthService service;
+    /** For handling web requests */
+    private final StandardOAuthService service;
 
-	/** The class defined by this manager */
-	private final Class<X> underlyingClass;
+    /** The class defined by this manager */
+    private final Class<X> underlyingClass;
 
-	/**
-	 * Base constructor
-	 * 
-	 * @param uClass
-	 *            The class that this object manages
-	 */
-	public ObjectManager(Class<X> uClass, StandardOAuthService serv) {
-		underlyingClass = uClass;
-		service = serv;
-		builder = ObjectBuilderFactory.getInstance().getObjectBuilder(uClass,
-				serv);
-	}
+    /**
+     * Base constructor
+     * 
+     * @param uClass
+     *            The class that this object manages
+     * @param serv
+     *            The web server to run requests with
+     */
+    public ObjectManager(final Class<X> uClass, final StandardOAuthService serv) {
+        underlyingClass = uClass;
+        service = serv;
+        builder = ObjectBuilderFactory.getInstance().getObjectBuilder(uClass, serv);
+    }
 
-	public X get() throws IOException {
-		// Check the local cache
+    /**
+     * Gets an object
+     * 
+     * @return The object to get
+     * @throws IOException
+     *             If we can't communicate correctly
+     */
+    public X get() throws IOException {
+        // Check the local cache
 
-		// Check for staling
+        // Check for staling
 
-		// Update the object if necessary
-		LinkURL link = underlyingClass.getAnnotation(LinkURL.class);
-		String path = link.url();
-		JsonObject objRep = service.get(path).getAsJsonObject();
-		X obj = builder.build(objRep);
+        // Update the object if necessary
+        LinkURL link = underlyingClass.getAnnotation(LinkURL.class);
+        String path = link.url();
+        JsonObject objRep = service.get(path).getAsJsonObject();
+        X obj = builder.build(objRep);
 
-		// Return the object
-		return obj;
-	}
+        // Return the object
+        return obj;
+    }
 
-	public X get(String id) {
-		// Check the local cache
+    /**
+     * Gets
+     * 
+     * @param id
+     *            The Id to get from
+     * @return The object with the relevant id
+     */
+    public X get(final String id) {
+        // Check the local cache
 
-		// Check for staling
+        // Check for staling
 
-		// Update the object if necessary
+        // Update the object if necessary
 
-		// Return the object
-		return null;
-	}
+        // Return the object
+        return null;
+    }
 
-	public void refresh(X obj) throws IOException {
-		LinkURL link = underlyingClass.getAnnotation(LinkURL.class);
-		String path = link.url();
-		String rPath = builder.replace(path, obj, null);
-		JsonObject objRep = service.get(rPath).getAsJsonObject();
-		builder.refreshObject(obj, objRep);
-	}
-
-	private void runMethod(Method m, URL url, String path) {
-
-	}
+    /**
+     * Refreshs the supplied object
+     * 
+     * @param obj
+     *            The object to be refreshed
+     * @throws IOException
+     *             If we can't communicate
+     */
+    public void refresh(final X obj) throws IOException {
+        LinkURL link = underlyingClass.getAnnotation(LinkURL.class);
+        String path = link.url();
+        String rPath = builder.replace(path, obj, null);
+        JsonObject objRep = service.get(rPath).getAsJsonObject();
+        builder.refreshObject(obj, objRep);
+    }
 }

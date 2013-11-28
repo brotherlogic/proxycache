@@ -4,46 +4,80 @@ import java.util.Collection;
 
 import com.brotherlogic.proxycache.LinkURL;
 
+/**
+ * A release in the discogs world
+ * 
+ * @author simon
+ * 
+ */
 public class Release {
 
-	long id;
-	String title;
-	Collection<Label> labels;
-	int rating = -1;
+    private long id;
+    private Collection<Label> labels;
+    private int rating = -1;
+    private String title;
 
-	public int getRating() {
-		return rating;
-	}
+    /**
+     * @return The id of the release
+     */
+    public long getId() {
+        return id;
+    }
 
-	@LinkURL(path = "basic_information->rating")
-	public void setRating(int rating) {
-		this.rating = rating;
-	}
+    /**
+     * @return A {@link Collection} of all the {@link Label} for this release
+     */
+    public Collection<Label> getLabels() {
+        return labels;
+    }
 
-	public long getId() {
-		return id;
-	}
+    /**
+     * @return The rating of this release
+     */
+    public int getRating() {
+        return rating;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    /**
+     * @return The name of this release
+     */
+    public String getTitle() {
+        return title;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    /**
+     * @param relId
+     *            The id of this release
+     */
+    public void setId(final long relId) {
+        this.id = relId;
+    }
 
-	@LinkURL(path = "basic_information->title")
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    /**
+     * @param relLabels
+     *            All the {@link Label} suitable for this release
+     */
+    @LinkURL(path = "basic_information->labels", prodClass = "com.brotherlogic.proxycache.discogs.Label")
+    public void setLabels(final Collection<Label> relLabels) {
+        this.labels = relLabels;
+    }
 
-	public Collection<Label> getLabels() {
-		return labels;
-	}
+    /**
+     * @param rate
+     *            The user rating of this release
+     */
+    @LinkURL(path = "basic_information->rating")
+    public void setRating(final int rate) {
+        this.rating = rate;
+    }
 
-	@LinkURL(path = "basic_information->labels", prodClass = "com.brotherlogic.proxycache.discogs.Label")
-	public void setLabels(Collection<Label> labels) {
-		this.labels = labels;
-	}
+    /**
+     * @param name
+     *            The name of this release
+     */
+    @LinkURL(path = "basic_information->title")
+    public void setTitle(final String name) {
+        this.title = name;
+    }
 
 }

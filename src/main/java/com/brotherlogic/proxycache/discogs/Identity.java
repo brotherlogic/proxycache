@@ -2,16 +2,29 @@ package com.brotherlogic.proxycache.discogs;
 
 import com.brotherlogic.proxycache.LinkURL;
 
+/**
+ * Identity in the discogs world
+ * 
+ * @author simon
+ * 
+ */
 @LinkURL(url = "http://api.discogs.com/oauth/identity")
 public class Identity {
 
-	String username;
+    private String username;
 
-	public String getUsername() {
-		return username;
-	}
+    /**
+     * @return The name of the user
+     */
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    /**
+     * @param name
+     *            The name of this user
+     */
+    public void setUsername(final String name) {
+        this.username = name;
+    }
 }

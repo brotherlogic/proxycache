@@ -2,6 +2,18 @@ package com.brotherlogic.proxycache.callbacklistener;
 
 import java.util.Map;
 
+/**
+ * A callback on the listener
+ * 
+ * @author simon
+ * 
+ */
 public interface ListenerCallback {
-	public void processResponse(Map<String, String> props);
+    /**
+     * Deals with the properties from the web response
+     * 
+     * @param props
+     *            The props to process
+     */
+    void processResponse(Map<String, String> props);
 }

@@ -6,104 +6,136 @@ import java.util.LinkedList;
 
 import com.brotherlogic.proxycache.discogs.StandardOAuthService;
 
+/**
+ * A double unbounded list
+ * 
+ * @author simon
+ * 
+ * @param <X>
+ */
 public abstract class UnboundedList<X> extends LinkedList<X> {
 
-	private final Class<X> clz;
+    private final Class<X> clz;
 
-	int overallSize;
+    private int overallSize;
 
-	@Override
-	public Object[] toArray() {
+    private final StandardOAuthService service;
 
-		// This ensures the collection is full
-		for (@SuppressWarnings("unused")
-		X val : this) {
-			// Do nothing
-		}
+    private boolean topFilled = false;
 
-		return super.toArray();
-	}
+    /**
+     * @param cls
+     *            The class for this list
+     * @param serv
+     *            The web service
+     */
+    public UnboundedList(final Class<X> cls, final StandardOAuthService serv) {
+        clz = cls;
+        service = serv;
+    }
 
-	private final StandardOAuthService service;
+    @Override
+    public void add(final int index, final X obj) {
+        super.add(index, obj);
+        overallSize++;
+    }
 
-	boolean topFilled = false;
+    @Override
+    public boolean add(final X obj) {
+        boolean val = super.add(obj);
+        overallSize++;
+        return val;
+    }
 
-	public UnboundedList(Class<X> cls, StandardOAuthService serv) {
-		clz = cls;
-		service = serv;
-	}
+    /**
+     * Fill the bottom of the list
+     * 
+     * @return The number of elements added
+     * @throws IOException
+     *             If we can't fill
+     */
+    protected abstract int fillBottom() throws IOException;
 
-	@Override
-	public void add(int index, X obj) {
-		super.add(index, obj);
-		overallSize++;
-	}
+    /**
+     * Fill the top of the list
+     * 
+     * @return The number of elements adde
+     * @throws IOException
+     *             If we can't fill
+     */
+    protected abstract int fillTop() throws IOException;
 
-	@Override
-	public boolean add(X obj) {
-		boolean val = super.add(obj);
-		overallSize++;
-		return val;
-	}
+    /**
+     * @return The web service for this list
+     */
+    protected StandardOAuthService getService() {
+        return service;
+    }
 
-	protected abstract int fillBottom() throws IOException;
+    /**
+     * @return The underlying class
+     */
+    public Class<X> getUnderlyingClass() {
+        return clz;
+    }
 
-	protected abstract int fillTop() throws IOException;
+    @Override
+    public Iterator<X> iterator() {
+        return new Iterator<X>() {
 
-	protected StandardOAuthService getService() {
-		return service;
-	}
+            private int index = 0;
 
-	public Class<X> getUnderlyingClass() {
-		return clz;
-	}
+            @Override
+            public boolean hasNext() {
+                if (!topFilled) {
+                    try {
+                        fillTop();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    topFilled = true;
+                    return index < size();
+                }
 
-	@Override
-	public Iterator<X> iterator() {
-		final Iterator<X> superIterator = super.iterator();
-		return new Iterator<X>() {
+                if (index >= size()) {
+                    try {
+                        fillBottom();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-			int index = 0;
+                return index < size();
 
-			@Override
-			public boolean hasNext() {
-				if (!topFilled) {
-					try {
-						fillTop();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					topFilled = true;
-					return index < size();
-				}
+            }
 
-				if (index >= size()) {
-					try {
-						fillBottom();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+            @Override
+            public X next() {
+                return get(index++);
+            }
 
-				return index < size();
+            @Override
+            public void remove() {
+                // remove(index++);
+            }
+        };
+    }
 
-			}
+    @Override
+    public int size() {
+        return overallSize;
+    }
 
-			@Override
-			public X next() {
-				return get(index++);
-			}
+    @Override
+    public Object[] toArray() {
 
-			@Override
-			public void remove() {
-				// remove(index++);
-			}
-		};
-	}
+        // This ensures the collection is full
+        Iterator<X> it = this.iterator();
+        while (it.hasNext()) {
+            it.next();
+        }
 
-	@Override
-	public int size() {
-		return overallSize;
-	}
+        return super.toArray();
+    }
 
 }

@@ -13,43 +13,45 @@ import org.scribe.oauth.OAuthService;
 
 import com.brotherlogic.proxycache.callbacklistener.SocketListener;
 
+/**
+ * Discogs service
+ * 
+ * @author simon
+ * 
+ */
 public class DiscogsService extends StandardOAuthService {
 
-	@Override
-	public Token buildAccessToken() throws IOException {
+    @Override
+    public Token buildAccessToken() throws IOException {
 
-		OAuthService service = getService("RCyqexMcezQoBfTGpcsG",
-				"wQMnFXZYkoyyVXEjrjBnbIMxBynUvpDB");
+        OAuthService service = getService("RCyqexMcezQoBfTGpcsG", "wQMnFXZYkoyyVXEjrjBnbIMxBynUvpDB");
 
-		Token requestToken = service.getRequestToken();
-		String authURL = service.getAuthorizationUrl(requestToken);
+        Token requestToken = service.getRequestToken();
+        String authURL = service.getAuthorizationUrl(requestToken);
 
-		// Run up the listening server
-		SocketListener listener = new SocketListener();
+        // Run up the listening server
+        SocketListener listener = new SocketListener();
 
-		try {
-			Desktop.getDesktop().browse(new URI(authURL));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		Map<String, String> response = listener.listenForWebRequest(8094);
+        try {
+            Desktop.getDesktop().browse(new URI(authURL));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        Map<String, String> response = listener.listenForWebRequest(8094);
 
-		Verifier v = new Verifier(response.get("oauth_verifier"));
-		Token accessToken = service.getAccessToken(requestToken, v);
+        Verifier v = new Verifier(response.get("oauth_verifier"));
+        Token accessToken = service.getAccessToken(requestToken, v);
 
-		return accessToken;
-	}
+        return accessToken;
+    }
 
-	@Override
-	public OAuthService getService(String consumerKey, String consumerSecret)
-			throws IOException {
-		return new ServiceBuilder().provider(DiscogsAPI.class)
-				.apiKey(consumerKey).apiSecret(consumerSecret)
-				.callback("http://localhost:8094/blah").build();
-	}
+    @Override
+    public OAuthService getService(final String consumerKey, final String consumerSecret) throws IOException {
+        return new ServiceBuilder().provider(DiscogsAPI.class).apiKey(consumerKey).apiSecret(consumerSecret).callback("http://localhost:8094/blah").build();
+    }
 
-	@Override
-	public Long getWaitTime() {
-		return new Long(1000);
-	}
+    @Override
+    public Long getWaitTime() {
+        return new Long(1000);
+    }
 }

@@ -2,26 +2,46 @@ package com.brotherlogic.proxycache.discogs;
 
 import com.brotherlogic.proxycache.LinkURL;
 
+/**
+ * A label in the discogs world
+ * 
+ * @author simon
+ * 
+ */
 @LinkURL(url = "http://api.discogs.com/labels/<Id>")
 public class Label {
 
-	String name;
-	int id;
+    private int id;
+    private String name;
 
-	public int getId() {
-		return id;
-	}
+    /**
+     * @return The id of the label
+     */
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * @return The name of the label
+     */
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    /**
+     * @param labelId
+     *            The id of the label
+     */
+    public void setId(final int labelId) {
+        this.id = labelId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @param nme
+     *            The name of the label
+     */
+    public void setName(final String nme) {
+        this.name = nme;
+    }
 
 }

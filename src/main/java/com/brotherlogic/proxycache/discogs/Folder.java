@@ -5,51 +5,84 @@ import java.util.Collection;
 import com.brotherlogic.proxycache.LinkURL;
 import com.brotherlogic.proxycache.Pagination;
 
+/**
+ * A folder in the discogs world
+ * 
+ * @author simon
+ * 
+ */
 public class Folder {
 
-	int count;
-	int id;
-	String name;
-	Collection<Release> releases;
-	String resource_url;
+    private int count;
+    private int id;
+    private String name;
+    private Collection<Release> releases;
 
-	public int getCount() {
-		return count;
-	}
+    /**
+     * @return The number of elements in this folder
+     */
+    public int getCount() {
+        return count;
+    }
 
-	public int getId() {
-		return id;
-	}
+    /**
+     * @return The id of the folder
+     */
+    public int getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    /**
+     * @return THe name of the folder
+     */
+    public String getName() {
+        return name;
+    }
 
-	public Collection<Release> getReleases() {
-		return releases;
-	}
+    /**
+     * @return A Collection of all the releases in this folder
+     */
+    public Collection<Release> getReleases() {
+        return releases;
+    }
 
-	public void setCount(int count) {
-		this.count = count;
-	}
+    /**
+     * @param cnt
+     *            The number of releases in the folder
+     */
+    public void setCount(final int cnt) {
+        this.count = cnt;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * @param folderId
+     *            The number of this folder
+     */
+    public void setId(final int folderId) {
+        this.id = folderId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @param nme
+     *            The name of this folder
+     */
+    public void setName(final String nme) {
+        this.name = nme;
+    }
 
-	@LinkURL(url = "[resource_url]/releases", prodClass = "com.brotherlogic.proxycache.discogs.Release", path = "releases")
-	@Pagination(botPath = "pagination->urls->next")
-	public void setReleases(Collection<Release> releases) {
-		this.releases = releases;
-	}
+    /**
+     * @param rels
+     *            The releases in this folder
+     */
+    @LinkURL(url = "[resource_url]/releases", prodClass = "com.brotherlogic.proxycache.discogs.Release", path = "releases")
+    @Pagination(botPath = "pagination->urls->next")
+    public void setReleases(final Collection<Release> rels) {
+        this.releases = rels;
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 
 }

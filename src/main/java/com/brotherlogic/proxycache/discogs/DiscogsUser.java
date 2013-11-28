@@ -5,42 +5,75 @@ import java.util.LinkedList;
 
 import com.brotherlogic.proxycache.LinkURL;
 
+/**
+ * User in the discogs world
+ * 
+ * @author simon
+ * 
+ */
 @LinkURL(url = "http://api.discogs.com/users/<username>")
 public class DiscogsUser {
 
-	private Collection<Folder> folders = new LinkedList<Folder>();
+    private Collection<Folder> folders = new LinkedList<Folder>();
 
-	private int releases_rated;
+    private int releasesRated;
 
-	private String username;
+    private String username;
 
-	public DiscogsUser(String username) {
-		this.username = username;
-	}
+    /**
+     * COnstructor
+     * 
+     * @param name
+     *            THe name of the user
+     */
+    public DiscogsUser(final String name) {
+        this.username = name;
+    }
 
-	public Collection<Folder> getFolders() {
-		return folders;
-	}
+    /**
+     * @return The set of folders for this user
+     */
+    public Collection<Folder> getFolders() {
+        return folders;
+    }
 
-	public int getReleases_rated() {
-		return releases_rated;
-	}
+    /**
+     * @return The number of releases rated
+     */
+    public int getReleasesRated() {
+        return releasesRated;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    /**
+     * @return The name of this user
+     */
+    public String getUsername() {
+        return username;
+    }
 
-	@LinkURL(path = "folders", url = "http://api.discogs.com/users/<username>/collection/folders", prodClass = "com.brotherlogic.proxycache.discogs.Folder")
-	public void setFolders(Collection<Folder> folds) {
-		folders = folds;
-	}
+    /**
+     * @param folds
+     *            The folders for this user
+     */
+    @LinkURL(path = "folders", url = "http://api.discogs.com/users/<username>/collection/folders", prodClass = "com.brotherlogic.proxycache.discogs.Folder")
+    public void setFolders(final Collection<Folder> folds) {
+        folders = folds;
+    }
 
-	public void setReleases_rated(int releases_rated) {
-		this.releases_rated = releases_rated;
-	}
+    /**
+     * @param relRated
+     *            The number of releases rated
+     */
+    public void setReleasesRated(final int relRated) {
+        this.releasesRated = relRated;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    /**
+     * @param name
+     *            The name of this user
+     */
+    public void setUsername(final String name) {
+        this.username = name;
+    }
 
 }
