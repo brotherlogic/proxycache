@@ -12,6 +12,18 @@ public abstract class UnboundedList<X> extends LinkedList<X> {
 
 	int overallSize;
 
+	@Override
+	public Object[] toArray() {
+
+		// This ensures the collection is full
+		for (@SuppressWarnings("unused")
+		X val : this) {
+			// Do nothing
+		}
+
+		return super.toArray();
+	}
+
 	private final StandardOAuthService service;
 
 	boolean topFilled = false;

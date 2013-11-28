@@ -85,4 +85,9 @@ public class SocketListener {
 
 		return mapper;
 	}
+
+	public static void main(String[] args) {
+		SocketListener listener = new SocketListener();
+		listener.listenForWebRequest(8085);
+	}
 }

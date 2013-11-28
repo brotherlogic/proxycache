@@ -24,7 +24,7 @@ public abstract class StandardOAuthService {
 
 		localWait();
 
-		login("madeup1", "madeup2");
+		login("RCyqexMcezQoBfTGpcsG", "wQMnFXZYkoyyVXEjrjBnbIMxBynUvpDB");
 		OAuthRequest request = new OAuthRequest(Verb.GET, url);
 		service.signRequest(accessToken, request);
 		Response response = request.send();

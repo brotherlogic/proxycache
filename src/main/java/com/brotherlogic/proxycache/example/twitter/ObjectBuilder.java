@@ -69,7 +69,8 @@ public class ObjectBuilder<X> {
 			if (anno != null && anno.path().length() > 0) {
 				JsonElement elem = applyAnnotationMethod(m, anno, object,
 						source);
-				m.invoke(object, buildParams(m, new JsonElement[] { elem }));
+				if (elem != null)
+					m.invoke(object, buildParams(m, new JsonElement[] { elem }));
 			} else {
 				// Look for the item in the json source
 				if (source.has(getJSONName(m))) {
@@ -144,8 +145,6 @@ public class ObjectBuilder<X> {
 			return elem.getAsString();
 		else if (clz.equals(Integer.class) || clz.equals(int.class))
 			return elem.getAsInt();
-
-		System.out.println("Can't convert " + clz);
 
 		return null;
 	}

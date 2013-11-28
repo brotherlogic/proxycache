@@ -18,7 +18,8 @@ public class DiscogsService extends StandardOAuthService {
 	@Override
 	public Token buildAccessToken() throws IOException {
 
-		OAuthService service = getService("blah1", "blah2");
+		OAuthService service = getService("RCyqexMcezQoBfTGpcsG",
+				"wQMnFXZYkoyyVXEjrjBnbIMxBynUvpDB");
 
 		Token requestToken = service.getRequestToken();
 		String authURL = service.getAuthorizationUrl(requestToken);
@@ -50,10 +51,5 @@ public class DiscogsService extends StandardOAuthService {
 	@Override
 	public Long getWaitTime() {
 		return new Long(1000);
-	}
-
-	public static void main(String[] args) throws Exception {
-		DiscogsService serv = new DiscogsService();
-		System.out.println(serv.buildAccessToken());
 	}
 }

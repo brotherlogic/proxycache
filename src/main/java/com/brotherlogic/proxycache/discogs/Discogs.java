@@ -1,5 +1,9 @@
 package com.brotherlogic.proxycache.discogs;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.brotherlogic.proxycache.ObjectManager;
 
 public class Discogs {
@@ -21,11 +25,15 @@ public class Discogs {
 		DiscogsUser user = me.getMe();
 
 		for (Folder f : user.getFolders()) {
-			if (f.getName().equals("10s")) {
-				for (Release r : f.getReleases()) {
-					System.out.println("RELEASE = " + r.getTitle() + " => "
-							+ r.getLabels());
-				}
+			if (f.getName().equals("12s")) {
+				List<Release> rels = new LinkedList<>(f.getReleases());
+
+				Collections.shuffle(rels);
+				for (Release rel : rels)
+					if (rel.getRating() == -1) {
+						System.out.println(rel.getTitle());
+						System.exit(1);
+					}
 			}
 		}
 	}

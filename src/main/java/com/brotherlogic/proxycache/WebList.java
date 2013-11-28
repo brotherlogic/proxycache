@@ -30,9 +30,6 @@ public class WebList<X> extends UnboundedList<X> {
 		ObjectBuilder<X> builder = ObjectBuilderFactory.getInstance()
 				.getObjectBuilder(getUnderlyingClass(), getService());
 
-		System.out.println(pagScheme + " and " + lastPull);
-		System.out.println("Resolve = "
-				+ builder.resolvePath(pagScheme.botPath(), lastPull));
 		JsonElement elem = builder.resolvePath(pagScheme.botPath(), lastPull);
 		if (elem != null) {
 			String url = builder.resolvePath(pagScheme.botPath(), lastPull)
