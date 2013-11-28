@@ -9,12 +9,20 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * An unbounded double ended list
+ * 
+ * @author simon
+ * 
+ * @param <X>
+ *            The type represented by the list
+ */
 public class WebList<X> extends UnboundedList<X> {
 
-	Pagination pagScheme;
-	String baseURL;
-	String path;
-	JsonObject lastPull;
+	private final Pagination pagScheme;
+	private final String baseURL;
+	private final String path;
+	private JsonObject lastPull;
 
 	public WebList(Class<X> clz, StandardOAuthService serv, String baseURL,
 			String path, Pagination pag) {

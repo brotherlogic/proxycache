@@ -51,9 +51,4 @@ public class DiscogsService extends StandardOAuthService {
 	public Long getWaitTime() {
 		return new Long(1000);
 	}
-
-	public static void main(String[] args) throws Exception {
-		DiscogsService serv = new DiscogsService();
-		System.out.println(serv.buildAccessToken());
-	}
 }
