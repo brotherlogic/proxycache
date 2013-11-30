@@ -8,6 +8,7 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
+import com.brotherlogic.proxycache.Config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -42,7 +43,7 @@ public abstract class StandardOAuthService {
 
         localWait();
 
-        login("RCyqexMcezQoBfTGpcsG", "wQMnFXZYkoyyVXEjrjBnbIMxBynUvpDB");
+        login(Config.getInstance().getConfig("DISCOGS_KEY"), Config.getInstance().getConfig("DISCOGS_SECRET"));
         OAuthRequest request = new OAuthRequest(Verb.GET, url);
         service.signRequest(accessToken, request);
         Response response = request.send();

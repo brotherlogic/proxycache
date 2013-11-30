@@ -6,3 +6,4 @@ target/
 .checkstyle
 etc/config.txt
 config.sh
+configs

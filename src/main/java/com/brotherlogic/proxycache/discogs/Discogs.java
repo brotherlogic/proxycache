@@ -1,9 +1,11 @@
 package com.brotherlogic.proxycache.discogs;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.brotherlogic.proxycache.Config;
 import com.brotherlogic.proxycache.ObjectManager;
 
 /**
@@ -41,6 +43,8 @@ public class Discogs {
      *             if something goes wrong
      */
     public static void main(final String[] args) throws Exception {
+        Config.getInstance().loadDir(new File("configs"));
+
         Discogs me = new Discogs();
         DiscogsUser user = me.getMe();
 
