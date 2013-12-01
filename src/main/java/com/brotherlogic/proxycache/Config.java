@@ -35,6 +35,18 @@ public final class Config {
 
     /**
      * @param key
+     *            Config key to be deleted
+     */
+    public void delete(final String key) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("key", key);
+        if (configCollection.find(query).size() > 0) {
+            configCollection.remove(configCollection.find(query).next());
+        }
+    }
+
+    /**
+     * @param key
      *            Config key
      * @return corresponding value for given key
      */
