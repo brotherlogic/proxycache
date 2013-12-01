@@ -80,7 +80,7 @@ public class ObjectBuilder<X> {
                 SimpleCollectionUnbounded scu = new SimpleCollectionUnbounded<>(clz, service, replace(anno.url(), object, source), anno.path());
                 m.invoke(object, new Object[] { scu });
             } else {
-                WebList wl = new WebList<>(clz, service, replace(anno.url(), object, source), anno.path(), pag);
+                WebList<?> wl = new WebList<>(clz, service, replace(anno.url(), object, source), anno.path(), pag);
                 m.invoke(object, new Object[] { wl });
             }
         } catch (Exception e) {
@@ -117,8 +117,6 @@ public class ObjectBuilder<X> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // Cannot apply this method - just fall out
     }
 
     /**
@@ -282,6 +280,7 @@ public class ObjectBuilder<X> {
             if (m.getParameterTypes().length == 1 && Collection.class.isAssignableFrom(m.getParameterTypes()[0])) {
                 applyCollectionMethod(m, object, source);
             } else {
+
                 applyMethod(m, object, source);
             }
         }

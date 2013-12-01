@@ -11,6 +11,7 @@ import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
+import com.brotherlogic.proxycache.Config;
 import com.brotherlogic.proxycache.callbacklistener.SocketListener;
 
 /**
@@ -24,7 +25,12 @@ public class DiscogsService extends StandardOAuthService {
     @Override
     public Token buildAccessToken() throws IOException {
 
-        OAuthService service = getService("RCyqexMcezQoBfTGpcsG", "wQMnFXZYkoyyVXEjrjBnbIMxBynUvpDB");
+        // First check the config system
+        if (Config.getInstance().getConfig("DISCOGS_ACCESS_KEY") != null) {
+            return new Token(Config.getInstance().getConfig("DISCOGS_ACCESS_KEY"), Config.getInstance().getConfig("DISCOGS_ACCESS_SECRET"));
+        }
+
+        OAuthService service = getService(Config.getInstance().getConfig("DISCOGS_KEY"), Config.getInstance().getConfig("DISCOGS_SECRET"));
 
         Token requestToken = service.getRequestToken();
         String authURL = service.getAuthorizationUrl(requestToken);
@@ -41,6 +47,9 @@ public class DiscogsService extends StandardOAuthService {
 
         Verifier v = new Verifier(response.get("oauth_verifier"));
         Token accessToken = service.getAccessToken(requestToken, v);
+
+        Config.getInstance().store("DISCOGS_ACCESS_KEY", accessToken.getToken());
+        Config.getInstance().store("DISCOGS_ACCESS_SECRET", accessToken.getSecret());
 
         return accessToken;
     }
