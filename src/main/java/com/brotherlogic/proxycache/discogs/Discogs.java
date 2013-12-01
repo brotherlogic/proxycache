@@ -54,7 +54,7 @@ public class Discogs {
 
                 Collections.shuffle(rels);
                 for (Release rel : rels) {
-                    if (rel.getRating() == -1) {
+                    if (rel.getRating() <= 0) {
                         System.out.println(rel.getTitle());
                         System.exit(1);
                     }

@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 
 /**
@@ -40,7 +41,12 @@ public final class Config {
     public String getConfig(final String key) {
         BasicDBObject query = new BasicDBObject();
         query.append("key", key);
-        return (String) configCollection.find(query).next().get("key");
+        DBCursor cursor = configCollection.find(query);
+        if (cursor.hasNext()) {
+            return (String) cursor.next().get("value");
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -68,7 +74,7 @@ public final class Config {
             BufferedReader reader = new BufferedReader(new FileReader(f));
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 String key = line.substring(0, line.indexOf("="));
-                String value = line.substring(line.indexOf("="));
+                String value = line.substring(line.indexOf("=") + 1);
                 store(key, value);
             }
             reader.close();
@@ -86,8 +92,12 @@ public final class Config {
     public void store(final String key, final String value) {
         BasicDBObject query = new BasicDBObject();
         query.put("key", key);
+        if (configCollection.find(query).size() > 0) {
+            configCollection.remove(configCollection.find(query).next());
+        }
         query.put("value", value);
-        configCollection.apply(query);
+        configCollection.insert(query);
+
     }
 
     /**

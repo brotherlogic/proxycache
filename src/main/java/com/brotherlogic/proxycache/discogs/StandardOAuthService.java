@@ -48,6 +48,7 @@ public abstract class StandardOAuthService {
         service.signRequest(accessToken, request);
         Response response = request.send();
         lastPullTime = System.currentTimeMillis();
+        // System.out.println(response.getBody());
         return parser.parse(response.getBody());
     }
 

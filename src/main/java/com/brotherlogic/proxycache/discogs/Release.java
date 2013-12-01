@@ -66,7 +66,7 @@ public class Release {
      * @param rate
      *            The user rating of this release
      */
-    @LinkURL(path = "basic_information->rating")
+    @LinkURL(path = "rating")
     public void setRating(final int rate) {
         this.rating = rate;
     }
