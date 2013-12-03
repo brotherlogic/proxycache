@@ -1,4 +1,4 @@
-package com.brotherlogic.proxycache.callbacklistener;
+package com.brotherlogic.proxycache.callback;
 
 import java.util.Map;
 

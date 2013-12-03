@@ -12,7 +12,7 @@ import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
 import com.brotherlogic.proxycache.Config;
-import com.brotherlogic.proxycache.callbacklistener.SocketListener;
+import com.brotherlogic.proxycache.callback.SocketListener;
 
 /**
  * Discogs service

@@ -6,8 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import com.brotherlogic.proxycache.discogs.StandardOAuthService;
-
 public abstract class CachingOAuthService extends StandardOAuthService {
 
 	private final File cacheDir;
@@ -25,6 +23,7 @@ public abstract class CachingOAuthService extends StandardOAuthService {
 
 	@Override
 	protected String getRaw(String url) throws IOException {
+
 		File f = new File(cacheDir, url.hashCode() + ".cache");
 
 		if (useCache && f.exists()) {

@@ -1,4 +1,4 @@
-package com.brotherlogic.proxycache.discogs;
+package com.brotherlogic.proxycache.runners;
 
 import java.io.IOException;
 

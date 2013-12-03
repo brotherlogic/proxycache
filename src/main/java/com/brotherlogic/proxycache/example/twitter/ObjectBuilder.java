@@ -9,7 +9,8 @@ import com.brotherlogic.proxycache.LinkURL;
 import com.brotherlogic.proxycache.Pagination;
 import com.brotherlogic.proxycache.SimpleCollectionUnbounded;
 import com.brotherlogic.proxycache.WebList;
-import com.brotherlogic.proxycache.discogs.StandardOAuthService;
+import com.brotherlogic.proxycache.runners.StandardOAuthService;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -78,11 +79,26 @@ public class ObjectBuilder<X> {
 			Pagination pag = m.getAnnotation(Pagination.class);
 
 			if (pag == null) {
-				@SuppressWarnings("rawtypes")
-				SimpleCollectionUnbounded scu = new SimpleCollectionUnbounded<>(
-						clz, service, replace(anno.url(), object, source),
-						anno.path());
-				m.invoke(object, new Object[] { scu });
+
+				// If this is a reading type collection it'll have a url
+				if (anno.url().length() > 0) {
+					@SuppressWarnings("rawtypes")
+					SimpleCollectionUnbounded scu = new SimpleCollectionUnbounded<>(
+							clz, service, replace(anno.url(), object, source),
+							anno.path());
+					m.invoke(object, new Object[] { scu });
+				} else {
+					Collection c = new LinkedList();
+					JsonArray arr = resolvePath(anno.path(), source)
+							.getAsJsonArray();
+					Class colClz = Class.forName(anno.prodClass());
+					ObjectBuilder builder = ObjectBuilderFactory.getInstance()
+							.getObjectBuilder(colClz, service);
+					for (int i = 0; i < arr.size(); i++) {
+						c.add(builder.build(arr.get(i).getAsJsonObject()));
+					}
+					m.invoke(object, new Object[] { c });
+				}
 			} else {
 				WebList<?> wl = new WebList<>(clz, service, replace(anno.url(),
 						object, source), anno.path(), pag);

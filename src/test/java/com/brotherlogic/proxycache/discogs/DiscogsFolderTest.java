@@ -1,6 +1,7 @@
 package com.brotherlogic.proxycache.discogs;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,6 +29,27 @@ public class DiscogsFolderTest {
 			if (f.getName().equals("10s")) {
 				Assert.assertEquals("Mismatch in 10 inch folder size", 49,
 						f.getCount());
+				Assert.assertEquals("Mismatch in 10 inch id", 267115, f.getId());
+				Assert.assertEquals("Mismatch in releases size", 49, f
+						.getReleases().size());
+
+				// Check that to array works also
+				Object[] rels = f.getReleases().toArray();
+				Assert.assertEquals("Mismatch in 10 inch size", f.getCount(),
+						rels.length);
+			}
+
+			for (Release r : f.getReleases()) {
+				if (r.getTitle().equals("Llanfwrog EP")) {
+					Collection<Label> labels = r.getLabels();
+					Assert.assertEquals("Mismatch in label size", 1,
+							labels.size());
+
+					Label lab = labels.iterator().next();
+					Assert.assertEquals("Mismatch in label name", "Ankst",
+							lab.getName());
+
+				}
 			}
 		}
 	}

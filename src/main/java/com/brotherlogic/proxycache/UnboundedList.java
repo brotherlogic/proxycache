@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.brotherlogic.proxycache.discogs.StandardOAuthService;
+import com.brotherlogic.proxycache.runners.StandardOAuthService;
 
 /**
  * A double unbounded list
@@ -132,13 +132,6 @@ public abstract class UnboundedList<X> extends LinkedList<X> {
 
 	@Override
 	public Object[] toArray() {
-
-		// This ensures the collection is full
-		Iterator<X> it = this.iterator();
-		while (it.hasNext()) {
-			it.next();
-		}
-
 		return super.toArray();
 	}
 
