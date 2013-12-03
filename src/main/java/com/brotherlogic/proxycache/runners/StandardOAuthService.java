@@ -20,92 +20,98 @@ import com.google.gson.JsonParser;
  */
 public abstract class StandardOAuthService {
 
-	private static long lastPullTime = 0;
-	private Token accessToken;
-	private final JsonParser parser = new JsonParser();
-	private OAuthService service;
+    private static long lastPullTime = 0;
+    private Token accessToken;
+    private final JsonParser parser = new JsonParser();
+    private OAuthService service;
 
-	/**
-	 * @return The Access Token for this service
-	 * @throws IOException
-	 *             If we can't get the access token
-	 */
-	public abstract Token buildAccessToken() throws IOException;
+    /**
+     * @return The Access Token for this service
+     * @throws IOException
+     *             If we can't get the access token
+     */
+    public abstract Token buildAccessToken() throws IOException;
 
-	/**
-	 * @param url
-	 *            The URL to run the GET request for
-	 * @return The JSON response from the get
-	 * @throws IOException
-	 *             If the web request doesn't work
-	 */
-	public synchronized JsonElement get(final String url) throws IOException {
-		return parser.parse(getRaw(url));
-	}
+    /**
+     * @param url
+     *            The URL to run the GET request for
+     * @return The JSON response from the get
+     * @throws IOException
+     *             If the web request doesn't work
+     */
+    public synchronized JsonElement get(final String url) throws IOException {
+        return parser.parse(getRaw(url));
+    }
 
-	protected String getRaw(final String url) throws IOException {
-		localWait();
+    /**
+     * Gets the raw version of the url content
+     * 
+     * @param url
+     *            The URL to pull
+     * @return The String content from the URL
+     * @throws IOException
+     *             If we can't communicate correctly
+     */
+    protected String getRaw(final String url) throws IOException {
+        localWait();
 
-		login(Config.getInstance().getConfig("DISCOGS_KEY"), Config
-				.getInstance().getConfig("DISCOGS_SECRET"));
-		OAuthRequest request = new OAuthRequest(Verb.GET, url);
-		service.signRequest(accessToken, request);
-		Response response = request.send();
-		lastPullTime = System.currentTimeMillis();
+        login(Config.getInstance().getConfig("DISCOGS_KEY"), Config.getInstance().getConfig("DISCOGS_SECRET"));
+        OAuthRequest request = new OAuthRequest(Verb.GET, url);
+        service.signRequest(accessToken, request);
+        Response response = request.send();
+        lastPullTime = System.currentTimeMillis();
 
-		return response.getBody();
+        return response.getBody();
 
-	}
+    }
 
-	/**
-	 * @param key
-	 *            The key for this service
-	 * @param secret
-	 *            The secret for this service
-	 * @return The corresponding OAuthService
-	 * @throws IOException
-	 *             If we can't get at the service
-	 */
-	public abstract OAuthService getService(String key, String secret)
-			throws IOException;
+    /**
+     * @param key
+     *            The key for this service
+     * @param secret
+     *            The secret for this service
+     * @return The corresponding OAuthService
+     * @throws IOException
+     *             If we can't get at the service
+     */
+    public abstract OAuthService getService(String key, String secret) throws IOException;
 
-	/**
-	 * @return THe number of ms to wait between requests
-	 */
-	public abstract Long getWaitTime();
+    /**
+     * @return THe number of ms to wait between requests
+     */
+    public abstract Long getWaitTime();
 
-	/**
-	 * Wait for the right amount of time
-	 */
-	private void localWait() {
-		long waitTime = getWaitTime()
-				- (System.currentTimeMillis() - lastPullTime);
-		if (waitTime > 0) {
-			try {
-				Thread.sleep(waitTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    /**
+     * Wait for the right amount of time
+     */
+    private void localWait() {
+        long waitTime = getWaitTime() - (System.currentTimeMillis() - lastPullTime);
+        if (waitTime > 0) {
+            try {
+                Thread.sleep(waitTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	/**
-	 * Login to the service
-	 * 
-	 * @param secret
-	 *            The secret
-	 * @param key
-	 *            The key
-	 * @throws IOException
-	 *             If we can't login
-	 */
-	public void login(final String secret, final String key) throws IOException {
-		if (accessToken == null) {
-			accessToken = buildAccessToken();
-		}
+    /**
+     * Login to the service
+     * 
+     * @param secret
+     *            The secret
+     * @param key
+     *            The key
+     * @throws IOException
+     *             If we can't login
+     */
+    public void login(final String secret, final String key) throws IOException {
+        if (accessToken == null) {
+            accessToken = buildAccessToken();
+        }
 
-		if (service == null) {
-			service = getService(secret, key);
-		}
-	}
+        if (service == null) {
+            service = getService(secret, key);
+        }
+    }
 }
