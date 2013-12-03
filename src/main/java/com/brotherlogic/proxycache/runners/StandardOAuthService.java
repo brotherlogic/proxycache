@@ -1,4 +1,4 @@
-package com.brotherlogic.proxycache.discogs;
+package com.brotherlogic.proxycache.runners;
 
 import java.io.IOException;
 
@@ -40,7 +40,10 @@ public abstract class StandardOAuthService {
 	 *             If the web request doesn't work
 	 */
 	public synchronized JsonElement get(final String url) throws IOException {
+		return parser.parse(getRaw(url));
+	}
 
+	protected String getRaw(final String url) throws IOException {
 		localWait();
 
 		login(Config.getInstance().getConfig("DISCOGS_KEY"), Config
@@ -50,7 +53,8 @@ public abstract class StandardOAuthService {
 		Response response = request.send();
 		lastPullTime = System.currentTimeMillis();
 
-		return parser.parse(response.getBody());
+		return response.getBody();
+
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package com.brotherlogic.proxycache.example.twitter;
 
-import com.brotherlogic.proxycache.discogs.StandardOAuthService;
+import com.brotherlogic.proxycache.runners.StandardOAuthService;
 
 /**
  * The builder factory for builders

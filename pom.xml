@@ -96,6 +96,7 @@
 	    </ignores>-->
 	    <excludes>
               <exclude>com/brotherlogic/proxycache/runners/**/*.class</exclude>
+              <exclude>com/brotherlogic/proxycache/callback/**/*.class</exclude>
 	    </excludes>
 	  </instrumentation>
 	</configuration>

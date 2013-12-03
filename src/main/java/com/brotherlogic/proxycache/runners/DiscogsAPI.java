@@ -1,4 +1,4 @@
-package com.brotherlogic.proxycache.discogs;
+package com.brotherlogic.proxycache.runners;
 
 import org.scribe.builder.api.DefaultApi10a;
 import org.scribe.model.Token;
