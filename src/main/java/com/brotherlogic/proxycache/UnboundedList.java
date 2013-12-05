@@ -135,6 +135,11 @@ public abstract class UnboundedList<X> extends LinkedList<X> {
 
     @Override
     public Object[] toArray() {
+
+        for (X obj : this) {
+            obj.hashCode();
+        }
+
         return super.toArray();
     }
 

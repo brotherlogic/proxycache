@@ -36,13 +36,6 @@ public class Discogs {
         DiscogsUser user = new DiscogsUser(ident.getUsername());
 
         new ObjectManager<>(DiscogsUser.class, service).refresh(user);
-        System.out.println(user.getFolders().getClass());
-        System.out.println(user.getFolders().size());
-
-        if (true) {
-            System.exit(1);
-        }
-
         return user;
     }
 
@@ -61,8 +54,11 @@ public class Discogs {
         DiscogsUser user = me.getMe();
 
         for (Folder f : user.getFolders()) {
+            System.out.println(f.getName());
             if (f.getName().equals("12s")) {
                 List<Release> rels = new LinkedList<>(f.getReleases());
+
+                System.out.println("Found " + rels.size() + " releases " + f.getReleases().getClass());
 
                 Collections.shuffle(rels);
                 for (Release rel : rels) {
