@@ -21,6 +21,23 @@ public class Label {
         return id;
     }
 
+    private String catno;
+
+    /**
+     * @return The catalogue number (if appropriate)
+     */
+    public String getCatno() {
+        return catno;
+    }
+
+    /**
+     * @param labelCatNo
+     *            The catalogue number (if appropriate)
+     */
+    public void setCatno(final String labelCatNo) {
+        this.catno = labelCatNo;
+    }
+
     /**
      * @return The name of the label
      */

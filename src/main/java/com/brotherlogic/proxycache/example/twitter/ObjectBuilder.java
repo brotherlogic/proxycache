@@ -86,13 +86,16 @@ public class ObjectBuilder<X> {
                     m.invoke(object, new Object[] { scu });
                 } else {
                     Collection c = new LinkedList();
-                    JsonArray arr = resolvePath(anno.path(), source).getAsJsonArray();
-                    Class colClz = Class.forName(anno.prodClass());
-                    ObjectBuilder builder = ObjectBuilderFactory.getInstance().getObjectBuilder(colClz, service);
-                    for (int i = 0; i < arr.size(); i++) {
-                        c.add(builder.build(arr.get(i).getAsJsonObject()));
+                    JsonElement elem = resolvePath(anno.path(), source);
+                    if (elem != null) {
+                        JsonArray arr = elem.getAsJsonArray();
+                        Class colClz = Class.forName(anno.prodClass());
+                        ObjectBuilder builder = ObjectBuilderFactory.getInstance().getObjectBuilder(colClz, service);
+                        for (int i = 0; i < arr.size(); i++) {
+                            c.add(builder.build(arr.get(i).getAsJsonObject()));
+                        }
+                        m.invoke(object, new Object[] { c });
                     }
-                    m.invoke(object, new Object[] { c });
                 }
             } else {
                 WebList<?> wl = new WebList<>(clz, service, replace(anno.url(), object, source), anno.path(), pag);
@@ -114,19 +117,17 @@ public class ObjectBuilder<X> {
      *            The json source
      */
     private void applyMethod(final Method m, final X object, final JsonObject source) {
+        // System.out.println("APPLYING: " + m);
         try {
             // Look for an annotation
             LinkURL anno = m.getAnnotation(LinkURL.class);
 
-            if (anno != null && anno.path().length() > 0) {
+            if (source.has(getJSONName(m))) {
+                m.invoke(object, buildParams(m, source, new String[] { getJSONName(m) }));
+            } else if (anno != null && anno.path().length() > 0) {
                 JsonElement elem = applyAnnotationMethod(m, anno, object, source);
                 if (elem != null) {
                     m.invoke(object, buildParams(m, new JsonElement[] { elem }));
-                }
-            } else {
-                // Look for the item in the json source
-                if (source.has(getJSONName(m))) {
-                    m.invoke(object, buildParams(m, source, new String[] { getJSONName(m) }));
                 }
             }
         } catch (Exception e) {
@@ -354,7 +355,9 @@ public class ObjectBuilder<X> {
         String[] elems = path.split("->");
         JsonElement elem = obj;
         for (int i = 0; i < elems.length; i++) {
-            elem = elem.getAsJsonObject().get(elems[i]);
+            if (elem != null) {
+                elem = elem.getAsJsonObject().get(elems[i]);
+            }
         }
 
         return elem;

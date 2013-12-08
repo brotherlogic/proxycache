@@ -132,6 +132,22 @@
           <!-- see goals wiki page for configuration options -->
         </configuration>
       </plugin>
+
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>exec-maven-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>com.brotherlogic.proxycache.runners.Discogs</mainClass>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   
