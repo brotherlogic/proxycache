@@ -36,7 +36,6 @@ public abstract class CachingOAuthService extends StandardOAuthService {
 
     @Override
     protected String getRaw(final String url) throws IOException {
-
         File f = new File(cacheDir, url.hashCode() + ".cache");
 
         if (useCache && f.exists()) {
