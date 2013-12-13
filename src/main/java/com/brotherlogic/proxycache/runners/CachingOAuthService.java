@@ -22,7 +22,7 @@ public abstract class CachingOAuthService extends StandardOAuthService {
      *            if true, we'll pull from the cache; if false we'll get the url contents
      */
     public static void forceCache(final boolean cache) {
-        useCache = cache;
+        // useCache = cache;
     }
 
     /**

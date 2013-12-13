@@ -52,7 +52,7 @@ public class Discogs {
     public static void main(final String[] args) throws Exception {
         Config.getInstance().loadDir(new File("configs"));
         Discogs me = new Discogs();
-        me.getLengths(39126);
+        me.getLengths(39146);
         // me.printRecords("12s", "Vinyl", 8, new File("/Users/simon/local/Dropbox/records/12.records"));
         // me.pick12();
     }
