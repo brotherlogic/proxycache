@@ -50,10 +50,12 @@ public abstract class CachingOAuthService extends StandardOAuthService {
 
         String superResp = super.getRaw(url);
 
-        // Cache out the response
-        PrintStream ps = new PrintStream(f);
-        ps.print(superResp);
-        ps.close();
+        if (useCache) {
+            // Cache out the response
+            PrintStream ps = new PrintStream(f);
+            ps.print(superResp);
+            ps.close();
+        }
 
         return superResp;
     }
