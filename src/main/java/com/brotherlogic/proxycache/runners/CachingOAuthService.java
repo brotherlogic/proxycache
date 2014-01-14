@@ -14,16 +14,8 @@ import java.io.PrintStream;
  */
 public abstract class CachingOAuthService extends StandardOAuthService {
 
-    private final File cacheDir;
+    private static File cacheDir;
     private static boolean useCache = false;
-
-    /**
-     * @param cache
-     *            if true, we'll pull from the cache; if false we'll get the url contents
-     */
-    public static void forceCache(final boolean cache) {
-        // useCache = cache;
-    }
 
     /**
      * Constructor
@@ -58,5 +50,14 @@ public abstract class CachingOAuthService extends StandardOAuthService {
         }
 
         return superResp;
+    }
+
+    /**
+     * @param location
+     *            Forces us to use the cache at the specified location
+     */
+    public static void forceCache(final String location) {
+        useCache = true;
+        cacheDir = new File(location);
     }
 }

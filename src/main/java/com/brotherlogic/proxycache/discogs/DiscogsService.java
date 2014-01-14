@@ -1,4 +1,4 @@
-package com.brotherlogic.proxycache.runners;
+package com.brotherlogic.proxycache.discogs;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import org.scribe.oauth.OAuthService;
 
 import com.brotherlogic.proxycache.Config;
 import com.brotherlogic.proxycache.callback.SocketListener;
+import com.brotherlogic.proxycache.runners.CachingOAuthService;
 
 /**
  * Discogs service

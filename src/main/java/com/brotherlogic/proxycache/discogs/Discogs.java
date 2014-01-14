@@ -1,4 +1,4 @@
-package com.brotherlogic.proxycache.runners;
+package com.brotherlogic.proxycache.discogs;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -9,10 +9,6 @@ import java.util.List;
 
 import com.brotherlogic.proxycache.Config;
 import com.brotherlogic.proxycache.ObjectManager;
-import com.brotherlogic.proxycache.discogs.DiscogsUser;
-import com.brotherlogic.proxycache.discogs.Folder;
-import com.brotherlogic.proxycache.discogs.Identity;
-import com.brotherlogic.proxycache.discogs.Release;
 
 /**
  * Master discogs
