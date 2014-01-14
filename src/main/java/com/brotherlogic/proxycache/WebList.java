@@ -2,8 +2,6 @@ package com.brotherlogic.proxycache;
 
 import java.io.IOException;
 
-import com.brotherlogic.proxycache.example.twitter.ObjectBuilder;
-import com.brotherlogic.proxycache.example.twitter.ObjectBuilderFactory;
 import com.brotherlogic.proxycache.runners.StandardOAuthService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
