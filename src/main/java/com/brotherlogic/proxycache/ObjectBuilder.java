@@ -1,14 +1,10 @@
-package com.brotherlogic.proxycache.example.twitter;
+package com.brotherlogic.proxycache;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.brotherlogic.proxycache.LinkURL;
-import com.brotherlogic.proxycache.Pagination;
-import com.brotherlogic.proxycache.SimpleCollectionUnbounded;
-import com.brotherlogic.proxycache.WebList;
 import com.brotherlogic.proxycache.runners.StandardOAuthService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

@@ -7,3 +7,4 @@ target/
 etc/config.txt
 config.sh
 configs
+cache/*

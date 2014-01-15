@@ -1,9 +1,8 @@
-package com.brotherlogic.proxycache.runners;
+package com.brotherlogic.proxycache.discogs;
 
 import java.util.Collection;
 
 import com.brotherlogic.proxycache.LinkURL;
-import com.brotherlogic.proxycache.discogs.Release;
 
 /**
  * Master release in Discogs

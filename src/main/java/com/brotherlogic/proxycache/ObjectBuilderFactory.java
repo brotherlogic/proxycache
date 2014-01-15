@@ -1,4 +1,4 @@
-package com.brotherlogic.proxycache.example.twitter;
+package com.brotherlogic.proxycache;
 
 import com.brotherlogic.proxycache.runners.StandardOAuthService;
 
