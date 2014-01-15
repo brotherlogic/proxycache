@@ -4,13 +4,15 @@ import java.util.Collection;
 
 import com.brotherlogic.proxycache.LinkURL;
 import com.brotherlogic.proxycache.Pagination;
+import com.brotherlogic.proxycache.Staling;
 
 /**
- * A folder in the discogs world
+ * A folder in the discogs world - we always check for refresh
  * 
  * @author simon
  * 
  */
+@Staling(0)
 public class Folder {
 
     private int count;
