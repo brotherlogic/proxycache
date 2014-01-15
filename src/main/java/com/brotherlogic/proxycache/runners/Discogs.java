@@ -52,8 +52,9 @@ public class Discogs {
     public static void main(final String[] args) throws Exception {
         Config.getInstance().loadDir(new File("configs"));
         Discogs me = new Discogs();
-        // me.getLengths(39039);
+        // me.getLengths(245793);
         // me.printRecords("12s", "Vinyl", 8, new File("/Users/simon/local/Dropbox/records/12.records"));
+        // me.printRecords("CDs", "CD", 2, new File("/Users/simon/local/Dropbox/records/cd.records"));
         me.pick12();
     }
 
@@ -142,22 +143,24 @@ public class Discogs {
      */
     public void pick12() throws Exception {
         DiscogsUser user = getMe();
+        List<Release> rels = new LinkedList<>();
 
         for (Folder f : user.getFolders()) {
             System.out.println(f.getName());
-            if (f.getName().equals("12s")) {
-                List<Release> rels = new LinkedList<>(f.getReleases());
-
-                System.out.println("Found " + rels.size() + " releases " + f.getReleases().getClass());
-
-                Collections.shuffle(rels);
-                for (Release rel : rels) {
-                    if (rel.getRating() <= 0) {
-                        System.out.println(rel.getTitle());
-                        System.exit(1);
-                    }
-                }
+            if (f.getName().equals("12s") || f.getName().equals("10s")) {
+                rels.addAll(f.getReleases());
             }
         }
+
+        System.out.println("Found " + rels.size() + " releases");
+
+        Collections.shuffle(rels);
+        for (Release rel : rels) {
+            if (rel.getRating() <= 0) {
+                System.out.println(rel.getTitle() + " - " + rel.getLabelString());
+                System.exit(1);
+            }
+        }
+
     }
 }
