@@ -145,7 +145,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.brotherlogic.proxycache.runners.Discogs</mainClass>
+          <mainClass>com.brotherlogic.proxycache.discogs.Discogs</mainClass>
         </configuration>
       </plugin>
     </plugins>

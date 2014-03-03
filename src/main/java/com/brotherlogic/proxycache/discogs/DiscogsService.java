@@ -26,11 +26,14 @@ public class DiscogsService extends CachingOAuthService {
     @Override
     public Token buildAccessToken() throws IOException {
 
+        System.out.println("Building access token");
+
         // First check the config system
-        if (Config.getInstance().getConfig("DISCOGS_ACCESS_KEY") != null) {
+        if (Config.getInstance().getConfig("DISCOGS_ACCESS_KEY") == null) {
             return new Token(Config.getInstance().getConfig("DISCOGS_ACCESS_KEY"), Config.getInstance().getConfig("DISCOGS_ACCESS_SECRET"));
         }
 
+        System.out.println(Config.getInstance().getConfig("DISCOGS_KEY") + " and " + Config.getInstance().getConfig("DISCOGS_SECRET"));
         OAuthService service = getService(Config.getInstance().getConfig("DISCOGS_KEY"), Config.getInstance().getConfig("DISCOGS_SECRET"));
 
         Token requestToken = service.getRequestToken();
@@ -57,7 +60,7 @@ public class DiscogsService extends CachingOAuthService {
 
     @Override
     public OAuthService getService(final String consumerKey, final String consumerSecret) throws IOException {
-        return new ServiceBuilder().provider(DiscogsAPI.class).apiKey(consumerKey).apiSecret(consumerSecret).callback("http://localhost:8094/blah").build();
+        return new ServiceBuilder().provider(DiscogsAPI.class).apiKey(consumerKey).apiSecret(consumerSecret).callback("http://localhost:8094/blah").debugStream(System.out).build();
     }
 
     @Override

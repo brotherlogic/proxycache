@@ -148,7 +148,14 @@ public class Discogs {
             }
         }
 
-        System.out.println("Found " + rels.size() + " releases");
+        int count = 0;
+        for (Release rel : rels) {
+            if (rel.getRating() <= 0) {
+                count++;
+            }
+        }
+
+        System.out.println("Found " + rels.size() + "/" + count + " releases");
 
         Collections.shuffle(rels);
         for (Release rel : rels) {

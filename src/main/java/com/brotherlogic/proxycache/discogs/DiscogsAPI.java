@@ -23,6 +23,7 @@ public class DiscogsAPI extends DefaultApi10a {
 
     @Override
     public String getRequestTokenEndpoint() {
+        System.out.println("Getting request token");
         return "http://api.discogs.com/oauth/request_token";
     }
 

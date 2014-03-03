@@ -61,6 +61,7 @@ public abstract class StandardOAuthService {
         Response response = request.send();
         lastPullTime = System.currentTimeMillis();
 
+        System.out.println(url + " GOT: " + response.getBody());
         return response.getBody();
 
     }
@@ -106,6 +107,7 @@ public abstract class StandardOAuthService {
      *             If we can't login
      */
     public void login(final String secret, final String key) throws IOException {
+
         if (accessToken == null) {
             accessToken = buildAccessToken();
         }

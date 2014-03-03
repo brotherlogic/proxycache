@@ -53,6 +53,7 @@ public class ObjectManager<X> {
         // Update the object if necessary
         LinkURL link = underlyingClass.getAnnotation(LinkURL.class);
         String path = link.url();
+        System.out.println(service.getClass());
         JsonObject objRep = service.get(path).getAsJsonObject();
         X obj = builder.build(objRep);
 
