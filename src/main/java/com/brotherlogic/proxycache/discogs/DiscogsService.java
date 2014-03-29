@@ -21,50 +21,57 @@ import com.brotherlogic.proxycache.runners.CachingOAuthService;
  * @author simon
  * 
  */
-public class DiscogsService extends CachingOAuthService {
+public class DiscogsService extends CachingOAuthService
+{
 
-    @Override
-    public Token buildAccessToken() throws IOException {
+   @Override
+   public Token buildAccessToken() throws IOException
+   {
 
-        System.out.println("Building access token");
+      // First check the config system
+      if (Config.getInstance().getConfig("DISCOGS_ACCESS_KEY") != null)
+         return new Token(Config.getInstance().getConfig("DISCOGS_ACCESS_KEY"), Config
+               .getInstance().getConfig("DISCOGS_ACCESS_SECRET"));
 
-        // First check the config system
-        if (Config.getInstance().getConfig("DISCOGS_ACCESS_KEY") == null) {
-            return new Token(Config.getInstance().getConfig("DISCOGS_ACCESS_KEY"), Config.getInstance().getConfig("DISCOGS_ACCESS_SECRET"));
-        }
+      OAuthService service = getService(Config.getInstance().getConfig("DISCOGS_KEY"), Config
+            .getInstance().getConfig("DISCOGS_SECRET"));
 
-        System.out.println(Config.getInstance().getConfig("DISCOGS_KEY") + " and " + Config.getInstance().getConfig("DISCOGS_SECRET"));
-        OAuthService service = getService(Config.getInstance().getConfig("DISCOGS_KEY"), Config.getInstance().getConfig("DISCOGS_SECRET"));
+      Token requestToken = service.getRequestToken();
+      String authURL = service.getAuthorizationUrl(requestToken);
 
-        Token requestToken = service.getRequestToken();
-        String authURL = service.getAuthorizationUrl(requestToken);
+      // Run up the listening server
+      SocketListener listener = new SocketListener();
 
-        // Run up the listening server
-        SocketListener listener = new SocketListener();
+      try
+      {
+         Desktop.getDesktop().browse(new URI(authURL));
+      }
+      catch (URISyntaxException e)
+      {
+         e.printStackTrace();
+      }
+      Map<String, String> response = listener.listenForWebRequest(8094);
 
-        try {
-            Desktop.getDesktop().browse(new URI(authURL));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        Map<String, String> response = listener.listenForWebRequest(8094);
+      Verifier v = new Verifier(response.get("oauth_verifier"));
+      Token accessToken = service.getAccessToken(requestToken, v);
 
-        Verifier v = new Verifier(response.get("oauth_verifier"));
-        Token accessToken = service.getAccessToken(requestToken, v);
+      Config.getInstance().store("DISCOGS_ACCESS_KEY", accessToken.getToken());
+      Config.getInstance().store("DISCOGS_ACCESS_SECRET", accessToken.getSecret());
 
-        Config.getInstance().store("DISCOGS_ACCESS_KEY", accessToken.getToken());
-        Config.getInstance().store("DISCOGS_ACCESS_SECRET", accessToken.getSecret());
+      return accessToken;
+   }
 
-        return accessToken;
-    }
+   @Override
+   public OAuthService getService(final String consumerKey, final String consumerSecret)
+         throws IOException
+   {
+      return new ServiceBuilder().provider(DiscogsAPI.class).apiKey(consumerKey)
+            .apiSecret(consumerSecret).callback("http://localhost:8094/blah").build();
+   }
 
-    @Override
-    public OAuthService getService(final String consumerKey, final String consumerSecret) throws IOException {
-        return new ServiceBuilder().provider(DiscogsAPI.class).apiKey(consumerKey).apiSecret(consumerSecret).callback("http://localhost:8094/blah").debugStream(System.out).build();
-    }
-
-    @Override
-    public Long getWaitTime() {
-        return new Long(1000);
-    }
+   @Override
+   public Long getWaitTime()
+   {
+      return new Long(1000);
+   }
 }

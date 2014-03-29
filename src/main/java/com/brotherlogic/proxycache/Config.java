@@ -82,6 +82,7 @@ public final class Config {
      *            The file to be loaded
      */
     public void loadFile(final File f) {
+    	System.out.println("Reading: " + f);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(f));
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
