@@ -174,8 +174,7 @@ public class Discogs
       Config.getInstance().loadDir(new File("configs"));
       Discogs me = new Discogs();
       // me.getLengths(245793);
-      // me.printRecords("12s", "Vinyl", 8, new File(
-      // "/Users/simon/Dropbox/records/12.records"));
+      me.printRecords("12s", "Vinyl", 8, new File("/Users/simon/Dropbox/records/12.records"));
       // me.printRecords("CDs", "CD", 2, new File(
       // "/Users/simon/Dropbox/records/cd.records"));
       me.pick12();
