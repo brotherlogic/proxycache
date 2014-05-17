@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -21,6 +23,7 @@ public final class Config
 {
 
    private static Config config;
+   Set<File> loaded = new TreeSet<>();
 
    private final DBCollection configCollection;
 
@@ -33,6 +36,14 @@ public final class Config
    private Config() throws UnknownHostException
    {
       configCollection = new MongoClient().getDB("proxy-config").getCollection("config");
+   }
+
+   public void clear()
+   {
+      BasicDBObject query = new BasicDBObject();
+      configCollection.remove(query);
+      for (File f : loaded)
+         loadFile(f);
    }
 
    /**
@@ -85,6 +96,8 @@ public final class Config
    public void loadFile(final File f)
    {
       System.out.println("Reading: " + f);
+      loaded.add(f);
+
       try
       {
          BufferedReader reader = new BufferedReader(new FileReader(f));

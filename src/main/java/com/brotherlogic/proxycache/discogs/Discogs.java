@@ -1,6 +1,7 @@
 package com.brotherlogic.proxycache.discogs;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collections;
 import java.util.Comparator;
@@ -115,7 +116,21 @@ public class Discogs
    public void printRecords(final String category, final String format, final int bridge,
          final File outFile) throws Exception
    {
-      DiscogsUser user = getMe();
+      DiscogsUser user;
+      try
+      {
+         user = getMe();
+      }
+      catch (IOException e)
+      {
+         if (e.getMessage().contains("Requires Re-Auth"))
+         {
+            Config.getInstance().clear();
+            user = getMe();
+         }
+         else
+            throw e;
+      }
 
       outFile.createNewFile();
       PrintStream ps = new PrintStream(outFile);
