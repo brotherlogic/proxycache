@@ -64,6 +64,40 @@ public class Discogs
       return user;
    }
 
+    /**
+     * Picks a 12"
+     *
+     * @throws Exception
+     *             if we can't reach discogs
+     */
+    public void pickCD() throws Exception {
+        DiscogsUser user = getMe();
+        List<Release> rels = new LinkedList<>();
+
+        for (Folder f : user.getFolders()) {
+            System.out.println(f.getName());
+            if (f.getName().equals("CDs") || f.getName().equals("Digital")) {
+                rels.addAll(f.getReleases());
+            }
+        }
+
+        int count = 0;
+        for (Release rel : rels)
+            if (rel.getRating() <= 0) {
+                count++;
+            }
+
+        System.out.println("Found " + rels.size() + "/" + count + " releases");
+
+        Collections.shuffle(rels);
+        for (Release rel : rels)
+            if (rel.getRating() <= 0) {
+                System.out.println(rel.getTitle() + " - " + rel.getLabelString());
+                System.exit(1);
+            }
+
+    }
+
    /**
     * Picks a 12"
     * 
@@ -189,9 +223,9 @@ public class Discogs
       Config.getInstance().loadDir(new File("configs"));
       Discogs me = new Discogs();
       // me.getLengths(245793);
-      me.printRecords("12s", "Vinyl", 8, new File("/Users/simon/Dropbox/records/12.records"));
+      me.printRecords("12s", "Vinyl", 8, new File("/Users/stucker/Dropbox/records/12.records"));
       // me.printRecords("CDs", "CD", 2, new File(
       // "/Users/simon/Dropbox/records/cd.records"));
-      me.pick12();
+      me.pickCD();
    }
 }
