@@ -105,6 +105,7 @@ public abstract class StandardOAuthService
 
       if (response.getBody().contains("You must authenticate to access this resource"))
          throw new IOException("Requires Re-Auth");
+
       return response.getBody();
 
    }

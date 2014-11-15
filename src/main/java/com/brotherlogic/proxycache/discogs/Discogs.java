@@ -100,6 +100,41 @@ public class Discogs
    }
 
    /**
+    * Picks a 12"
+    *
+    * @throws Exception
+    *            if we can't reach discogs
+    */
+   public void pickCD() throws Exception
+   {
+      DiscogsUser user = getMe();
+      List<Release> rels = new LinkedList<>();
+
+      for (Folder f : user.getFolders())
+      {
+         System.out.println(f.getName());
+         if (f.getName().equals("CDs") || f.getName().equals("Digital"))
+            rels.addAll(f.getReleases());
+      }
+
+      int count = 0;
+      for (Release rel : rels)
+         if (rel.getRating() <= 0)
+            count++;
+
+      System.out.println("Found " + rels.size() + "/" + count + " releases");
+
+      Collections.shuffle(rels);
+      for (Release rel : rels)
+         if (rel.getRating() <= 0)
+         {
+            System.out.println(rel.getTitle() + " - " + rel.getLabelString());
+            System.exit(1);
+         }
+
+   }
+
+   /**
     * Prints out the records
     * 
     * @param category
@@ -139,8 +174,14 @@ public class Discogs
          {
             List<Release> rels = new LinkedList<>(f.getReleases());
 
+            List<Release> toRemove = new LinkedList<Release>();
+            for (Release rel : rels)
+               if (rel.getRating() < 1)
+                  toRemove.add(rel);
+            rels.removeAll(toRemove);
+
             Collections.sort(rels, new Comparator<Release>()
-            {
+                  {
                @Override
                public int compare(final Release o1, final Release o2)
                {
@@ -149,7 +190,7 @@ public class Discogs
                   else
                      return o1.getLabelString().compareTo(o2.getLabelString());
                }
-            });
+                  });
 
             int count = 0;
             for (Release rel : rels)
@@ -171,6 +212,12 @@ public class Discogs
                      + rel.getLabelString() + "-" + rel.getCatNoString() + "] : "
                      + rel.getNumberOfDiscs(format));
             }
+
+            ps.println("------------------------");
+            for (Release rel : toRemove)
+               ps.println(rel.getArtistString() + " - " + rel.getTitle() + " ["
+                     + rel.getLabelString() + "-" + rel.getCatNoString() + "] : "
+                     + rel.getNumberOfDiscs(format));
          }
 
       ps.close();
@@ -189,9 +236,12 @@ public class Discogs
       Config.getInstance().loadDir(new File("configs"));
       Discogs me = new Discogs();
       // me.getLengths(245793);
-      me.printRecords("12s", "Vinyl", 8, new File("/Users/simon/Dropbox/records/12.records"));
-      // me.printRecords("CDs", "CD", 2, new File(
-      // "/Users/simon/Dropbox/records/cd.records"));
+      // me.printRecords("12s", "Vinyl", 10, new
+      // File("/Users/simon/Dropbox/records/12.records"));
+      // me.printRecords("CDs", "CD", 3, new
+      // File("/Users/simon/Dropbox/records/cd.records"));
+      // me.printRecords("10s", "Vinyl", 1, new
+      // File("/Users/stucker/Dropbox/records/10.records"));
       me.pick12();
    }
 }

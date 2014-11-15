@@ -280,7 +280,7 @@ public class ObjectBuilder<X>
     */
    private void applyMethod(final Method m, final X object, final JsonObject source)
    {
-      // System.out.println("APPLYING: " + m);
+      // System.out.println("APPLYING: " + m + " with " + source);
       try
       {
          // Look for an annotation
@@ -365,6 +365,15 @@ public class ObjectBuilder<X>
          return elem.getAsString();
       else if (clz.equals(Integer.class) || clz.equals(int.class))
          return elem.getAsInt();
+      else if (clz.equals(String[].class))
+      {
+         JsonArray jArr = elem.getAsJsonArray();
+         String[] arr = new String[jArr.size()];
+         for (int i = 0; i < arr.length; i++)
+            arr[i] = jArr.get(i).getAsString();
+         return arr;
+
+      }
 
       return null;
    }
